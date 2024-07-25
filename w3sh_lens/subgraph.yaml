@@ -5,28 +5,49 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: TransparentUpgradeableProxy
+    name: TransparentUpgradableProxy
     network: matic
     source:
       address: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d"
-      abi: TransparentUpgradeableProxy
-      startBlock: 28384641
+      abi: TransparentUpgradableProxy
+      startBlock: 28384640
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - AdminChanged
-        - BeaconUpgraded
-        - Upgraded
+        - Approval
+        - ApprovalForAll
+        - BatchMetadataUpdate
+        - CollectNFTTransferred
+        - LensUpgradeVersion
+        - TokenGuardianStateChanged
+        - Transfer
+        - TreasuryFeeSet
+        - TreasurySet
+        - Unfollowed
       abis:
-        - name: TransparentUpgradeableProxy
-          file: ./abis/TransparentUpgradeableProxy.json
+        - name: TransparentUpgradableProxy
+          file: ./abis/TransparentUpgradableProxy.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
-        - event: BeaconUpgraded(indexed address)
-          handler: handleBeaconUpgraded
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
-      file: ./src/transparent-upgradeable-proxy.ts
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: CollectNFTTransferred(indexed uint256,indexed uint256,indexed uint256,address,address,uint256)
+          handler: handleCollectNFTTransferred
+        - event: LensUpgradeVersion(address,string,bytes20,uint256)
+          handler: handleLensUpgradeVersion
+        - event: TokenGuardianStateChanged(indexed address,indexed bool,uint256,uint256)
+          handler: handleTokenGuardianStateChanged
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: TreasuryFeeSet(indexed uint16,indexed uint16,uint256)
+          handler: handleTreasuryFeeSet
+        - event: TreasurySet(indexed address,indexed address,uint256)
+          handler: handleTreasurySet
+        - event: Unfollowed(indexed uint256,uint256,address,uint256)
+          handler: handleUnfollowed
+      file: ./src/transparent-upgradable-proxy.ts
