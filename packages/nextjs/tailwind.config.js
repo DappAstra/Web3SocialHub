@@ -82,6 +82,14 @@ module.exports = {
       animation: {
         "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
+      screens: {
+        'mobile':  "960px",
+        '0.5xl': '1125px',
+        '3xl': '2560px',
+      },
+      maxWidth: {
+        'mainSection': 'calc(100% - 35rem)',
+      },
     },
   },
 };

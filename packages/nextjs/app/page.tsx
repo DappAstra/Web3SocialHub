@@ -1,65 +1,110 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
+import userData from "./UserData";
+import { useClickOutside } from "@mantine/hooks";
 import type { NextPage } from "next";
-import { useAccount } from "wagmi";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Address } from "~~/components/scaffold-eth";
+import { BsFillCameraVideoFill } from "react-icons/bs";
+import { MdEmojiEmotions, MdInsertPhoto } from "react-icons/md";
+import Navbar from "~~/components/Navbar";
+import Post from "~~/components/Post";
+import Sidebar from "~~/components/Sidebar";
 
 const Home: NextPage = () => {
-  const { address: connectedAddress } = useAccount();
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const ref = useClickOutside(() => setIsFocused(false));
 
   return (
     <>
-      <div className="flex items-center flex-col flex-grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
-            <p className="my-2 font-medium">Connected Address:</p>
-            <Address address={connectedAddress} />
-          </div>
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
-        </div>
+      <div className="flex items-center flex-col flex-grow pt-2">
+        <Navbar />
+        <div className="mainContainer">
+          <Sidebar />
 
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
+          <div className="mainSection">
+            <div className="storiesWrapper">
+              <div className="storiesWidget">
+                {userData.map((user, index) => {
+                  return (
+                    <div className="story" key={index}>
+                      <div className="overlay"></div>
+                      <img src={`${user.storyImage}`} alt="" />
+                      <img src={`${user.profilePic}`} alt="" className="profileImage" />
+                      <div className="name">{user.name}</div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
+            <div ref={ref} className={`createPostWidget ${isFocused ? "active" : ""}`}>
+              <div className="createInput">
+                <img src="/assets/avatar_default.jpg" alt="" />
+                <input
+                  type="text"
+                  placeholder="What's on your mind, Jhon Doe?"
+                  id="createNewPost"
+                  onFocus={() => setIsFocused(true)}
+                />
+                <button className="inBtn">Post</button>
+              </div>
+              <div className="otherOptions">
+                <div className="option">
+                  <BsFillCameraVideoFill />
+                  <span>Go Live</span>
+                </div>
+                <div className="option">
+                  <MdInsertPhoto />
+                  <span>Photo/Video</span>
+                </div>
+                <div className="option">
+                  <MdEmojiEmotions />
+                  <span>Feeling/Activity</span>
+                </div>
+              </div>
+            </div>
+            {userData.map((user, index) => {
+              return <Post key={index} userData={user} />;
+            })}
+          </div>
+
+          <div className="rightSection">
+            <div className="requestWidget">
+              <h3>Requests</h3>
+              <div className="requestProfile">
+                <div className="details">
+                  <div className="profileImage">
+                    <img src={"/assets/avatar_default.jpg"} alt="" />
+                  </div>
+                  <div className="userDetails">
+                    <div className="name">Sophie Alexander</div>
+                    <div className="username">@johndoe</div>
+                  </div>
+                </div>
+                <div className="actions">
+                  <button className="actionBtn">Accept</button>
+                  <button className="actionBtn">Reject</button>
+                </div>
+              </div>
+              <div className="requestProfile">
+                <div className="details">
+                  <div className="profileImage">
+                    <img
+                      src={
+                        "https://images.unsplash.com/photo-1505695716405-61e75ecc5bab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Z2lybCxib3l8fHx8fHwxNjg5NzcxMTE5&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"
+                      }
+                      alt=""
+                    />
+                  </div>
+                  <div className="userDetails">
+                    <div className="name">Phillip Tønder</div>
+                    <div className="username">@philipTonder</div>
+                  </div>
+                </div>
+                <div className="actions">
+                  <button className="actionBtn">Accept</button>
+                  <button className="actionBtn">Reject</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
