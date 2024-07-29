@@ -1,0 +1,104 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: TransparentUpgradeableProxy
+    network: matic
+    source:
+      address: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d"
+      abi: TransparentUpgradeableProxy
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Acted
+        - BaseInitialized
+        - BatchMetadataUpdate
+        - Blocked
+        - CollectNFTTransferred
+        - CommentCreated
+        - DelegatedExecutorsConfigApplied
+        - DelegatedExecutorsConfigChanged
+        - EmergencyAdminSet
+        - FollowModuleSet
+        - FollowNFTDeployed
+        - Followed
+        - GovernanceSet
+        - LegacyCollectNFTDeployed
+        - MirrorCreated
+        - NonceUpdated
+        - PostCreated
+        - ProfileCreated
+        - ProfileCreatorWhitelisted
+        - ProfileMetadataSet
+        - QuoteCreated
+        - StateSet
+        - TokenGuardianStateChanged
+        - TreasuryFeeSet
+        - TreasurySet
+        - Unblocked
+        - Unfollowed
+      abis:
+        - name: TransparentUpgradeableProxy
+          file: ./abis/TransparentUpgradeableProxy.json
+      eventHandlers:
+        - event: Acted((uint256,uint256,uint256,uint256[],uint256[],address,bytes),bytes,address,uint256)
+          handler: handleActed
+        - event: BaseInitialized(string,string,uint256)
+          handler: handleBaseInitialized
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: Blocked(indexed uint256,uint256,address,uint256)
+          handler: handleBlocked
+        - event: CollectNFTTransferred(indexed uint256,indexed uint256,indexed uint256,address,address,uint256)
+          handler: handleCollectNFTTransferred
+        - event: CommentCreated((uint256,string,uint256,uint256,uint256[],uint256[],bytes,address[],bytes[],address,bytes),indexed uint256,bytes,bytes[],bytes,address,uint256)
+          handler: handleCommentCreated
+        - event: DelegatedExecutorsConfigApplied(indexed uint256,indexed uint256,uint256)
+          handler: handleDelegatedExecutorsConfigApplied
+        - event: DelegatedExecutorsConfigChanged(indexed uint256,indexed uint256,address[],bool[],uint256)
+          handler: handleDelegatedExecutorsConfigChanged
+        - event: EmergencyAdminSet(indexed address,indexed address,indexed address,uint256)
+          handler: handleEmergencyAdminSet
+        - event: FollowModuleSet(indexed uint256,address,bytes,bytes,address,uint256)
+          handler: handleFollowModuleSet
+        - event: FollowNFTDeployed(indexed uint256,indexed address,uint256)
+          handler: handleFollowNFTDeployed
+        - event: Followed(indexed uint256,uint256,uint256,bytes,bytes,address,uint256)
+          handler: handleFollowed
+        - event: GovernanceSet(indexed address,indexed address,indexed address,uint256)
+          handler: handleGovernanceSet
+        - event: LegacyCollectNFTDeployed(indexed uint256,indexed uint256,indexed address,uint256)
+          handler: handleLegacyCollectNFTDeployed
+        - event: MirrorCreated((uint256,string,uint256,uint256,uint256[],uint256[],bytes),indexed uint256,bytes,address,uint256)
+          handler: handleMirrorCreated
+        - event: NonceUpdated(indexed address,uint256,uint256)
+          handler: handleNonceUpdated
+        - event: PostCreated((uint256,string,address[],bytes[],address,bytes),indexed uint256,bytes[],bytes,address,uint256)
+          handler: handlePostCreated
+        - event: ProfileCreated(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleProfileCreated
+        - event: ProfileCreatorWhitelisted(indexed address,indexed bool,uint256)
+          handler: handleProfileCreatorWhitelisted
+        - event: ProfileMetadataSet(indexed uint256,string,address,uint256)
+          handler: handleProfileMetadataSet
+        - event: QuoteCreated((uint256,string,uint256,uint256,uint256[],uint256[],bytes,address[],bytes[],address,bytes),indexed uint256,bytes,bytes[],bytes,address,uint256)
+          handler: handleQuoteCreated
+        - event: StateSet(indexed address,indexed uint8,indexed uint8,uint256)
+          handler: handleStateSet
+        - event: TokenGuardianStateChanged(indexed address,indexed bool,uint256,uint256)
+          handler: handleTokenGuardianStateChanged
+        - event: TreasuryFeeSet(indexed uint16,indexed uint16,uint256)
+          handler: handleTreasuryFeeSet
+        - event: TreasurySet(indexed address,indexed address,uint256)
+          handler: handleTreasurySet
+        - event: Unblocked(indexed uint256,uint256,address,uint256)
+          handler: handleUnblocked
+        - event: Unfollowed(indexed uint256,uint256,address,uint256)
+          handler: handleUnfollowed
+      file: ./src/transparent-upgradeable-proxy.ts

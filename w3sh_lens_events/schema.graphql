@@ -1,0 +1,341 @@
+type Acted @entity(immutable: true) {
+  id: Bytes!
+  publicationActionParams_publicationActedProfileId: BigInt! # uint256
+  publicationActionParams_publicationActedId: BigInt! # uint256
+  publicationActionParams_actorProfileId: BigInt! # uint256
+  publicationActionParams_referrerProfileIds: [BigInt!]! # uint256[]
+  publicationActionParams_referrerPubIds: [BigInt!]! # uint256[]
+  publicationActionParams_actionModuleAddress: Bytes! # address
+  publicationActionParams_actionModuleData: Bytes! # bytes
+  actionModuleReturnData: Bytes! # bytes
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type BaseInitialized @entity(immutable: true) {
+  id: Bytes!
+  name: String! # string
+  symbol: String! # string
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type BatchMetadataUpdate @entity(immutable: true) {
+  id: Bytes!
+  fromTokenId: BigInt! # uint256
+  toTokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Blocked @entity(immutable: true) {
+  id: Bytes!
+  byProfileId: BigInt! # uint256
+  idOfProfileBlocked: BigInt! # uint256
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CollectNFTTransferred @entity(immutable: true) {
+  id: Bytes!
+  profileId: BigInt! # uint256
+  pubId: BigInt! # uint256
+  collectNFTId: BigInt! # uint256
+  from: Bytes! # address
+  to: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CommentCreated @entity(immutable: true) {
+  id: Bytes!
+  commentParams_profileId: BigInt! # uint256
+  commentParams_contentURI: String! # string
+  commentParams_pointedProfileId: BigInt! # uint256
+  commentParams_pointedPubId: BigInt! # uint256
+  commentParams_referrerProfileIds: [BigInt!]! # uint256[]
+  commentParams_referrerPubIds: [BigInt!]! # uint256[]
+  commentParams_referenceModuleData: Bytes! # bytes
+  commentParams_actionModules: [Bytes!]! # address[]
+  commentParams_actionModulesInitDatas: [Bytes!]! # bytes[]
+  commentParams_referenceModule: Bytes! # address
+  commentParams_referenceModuleInitData: Bytes! # bytes
+  pubId: BigInt! # uint256
+  referenceModuleReturnData: Bytes! # bytes
+  actionModulesInitReturnDatas: [Bytes!]! # bytes[]
+  referenceModuleInitReturnData: Bytes! # bytes
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DelegatedExecutorsConfigApplied @entity(immutable: true) {
+  id: Bytes!
+  delegatorProfileId: BigInt! # uint256
+  configNumber: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DelegatedExecutorsConfigChanged @entity(immutable: true) {
+  id: Bytes!
+  delegatorProfileId: BigInt! # uint256
+  configNumber: BigInt! # uint256
+  delegatedExecutors: [Bytes!]! # address[]
+  approvals: [Boolean!]! # bool[]
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EmergencyAdminSet @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  oldEmergencyAdmin: Bytes! # address
+  newEmergencyAdmin: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FollowModuleSet @entity(immutable: true) {
+  id: Bytes!
+  profileId: BigInt! # uint256
+  followModule: Bytes! # address
+  followModuleInitData: Bytes! # bytes
+  followModuleReturnData: Bytes! # bytes
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FollowNFTDeployed @entity(immutable: true) {
+  id: Bytes!
+  profileId: BigInt! # uint256
+  followNFT: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Followed @entity(immutable: true) {
+  id: Bytes!
+  followerProfileId: BigInt! # uint256
+  idOfProfileFollowed: BigInt! # uint256
+  followTokenIdAssigned: BigInt! # uint256
+  followModuleData: Bytes! # bytes
+  processFollowModuleReturnData: Bytes! # bytes
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovernanceSet @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  prevGovernance: Bytes! # address
+  newGovernance: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LegacyCollectNFTDeployed @entity(immutable: true) {
+  id: Bytes!
+  profileId: BigInt! # uint256
+  pubId: BigInt! # uint256
+  collectNFT: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MirrorCreated @entity(immutable: true) {
+  id: Bytes!
+  mirrorParams_profileId: BigInt! # uint256
+  mirrorParams_metadataURI: String! # string
+  mirrorParams_pointedProfileId: BigInt! # uint256
+  mirrorParams_pointedPubId: BigInt! # uint256
+  mirrorParams_referrerProfileIds: [BigInt!]! # uint256[]
+  mirrorParams_referrerPubIds: [BigInt!]! # uint256[]
+  mirrorParams_referenceModuleData: Bytes! # bytes
+  pubId: BigInt! # uint256
+  referenceModuleReturnData: Bytes! # bytes
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type NonceUpdated @entity(immutable: true) {
+  id: Bytes!
+  signer: Bytes! # address
+  nonce: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PostCreated @entity(immutable: true) {
+  id: Bytes!
+  postParams_profileId: BigInt! # uint256
+  postParams_contentURI: String! # string
+  postParams_actionModules: [Bytes!]! # address[]
+  postParams_actionModulesInitDatas: [Bytes!]! # bytes[]
+  postParams_referenceModule: Bytes! # address
+  postParams_referenceModuleInitData: Bytes! # bytes
+  pubId: BigInt! # uint256
+  actionModulesInitReturnDatas: [Bytes!]! # bytes[]
+  referenceModuleInitReturnData: Bytes! # bytes
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProfileCreated @entity(immutable: true) {
+  id: Bytes!
+  profileId: BigInt! # uint256
+  creator: Bytes! # address
+  to: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProfileCreatorWhitelisted @entity(immutable: true) {
+  id: Bytes!
+  profileCreator: Bytes! # address
+  whitelisted: Boolean! # bool
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProfileMetadataSet @entity(immutable: true) {
+  id: Bytes!
+  profileId: BigInt! # uint256
+  metadata: String! # string
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type QuoteCreated @entity(immutable: true) {
+  id: Bytes!
+  quoteParams_profileId: BigInt! # uint256
+  quoteParams_contentURI: String! # string
+  quoteParams_pointedProfileId: BigInt! # uint256
+  quoteParams_pointedPubId: BigInt! # uint256
+  quoteParams_referrerProfileIds: [BigInt!]! # uint256[]
+  quoteParams_referrerPubIds: [BigInt!]! # uint256[]
+  quoteParams_referenceModuleData: Bytes! # bytes
+  quoteParams_actionModules: [Bytes!]! # address[]
+  quoteParams_actionModulesInitDatas: [Bytes!]! # bytes[]
+  quoteParams_referenceModule: Bytes! # address
+  quoteParams_referenceModuleInitData: Bytes! # bytes
+  pubId: BigInt! # uint256
+  referenceModuleReturnData: Bytes! # bytes
+  actionModulesInitReturnDatas: [Bytes!]! # bytes[]
+  referenceModuleInitReturnData: Bytes! # bytes
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type StateSet @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  prevState: Int! # uint8
+  newState: Int! # uint8
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TokenGuardianStateChanged @entity(immutable: true) {
+  id: Bytes!
+  wallet: Bytes! # address
+  enabled: Boolean! # bool
+  tokenGuardianDisablingTimestamp: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TreasuryFeeSet @entity(immutable: true) {
+  id: Bytes!
+  prevTreasuryFee: Int! # uint16
+  newTreasuryFee: Int! # uint16
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TreasurySet @entity(immutable: true) {
+  id: Bytes!
+  prevTreasury: Bytes! # address
+  newTreasury: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Unblocked @entity(immutable: true) {
+  id: Bytes!
+  byProfileId: BigInt! # uint256
+  idOfProfileUnblocked: BigInt! # uint256
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Unfollowed @entity(immutable: true) {
+  id: Bytes!
+  unfollowerProfileId: BigInt! # uint256
+  idOfProfileUnfollowed: BigInt! # uint256
+  transactionExecutor: Bytes! # address
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
