@@ -10,7 +10,7 @@ dataSources:
     source:
       address: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d"
       abi: TransparentUpgradeableProxy
-      startBlock: 60035633
+      startBlock: 28384640
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
