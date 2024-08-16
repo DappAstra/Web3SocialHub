@@ -21,7 +21,6 @@ dataSources:
         - Followed
         - MirrorCreated
         - PostCreated
-        - ProfileCreated
         - ProfileMetadataSet
         - QuoteCreated
         - Unblocked
@@ -40,8 +39,6 @@ dataSources:
           handler: handleMirrorCreated
         - event: PostCreated((uint256,string,address[],bytes[],address,bytes),indexed uint256,bytes[],bytes,address,uint256)
           handler: handlePostCreated
-        - event: ProfileCreated(indexed uint256,indexed address,indexed address,uint256)
-          handler: handleProfileCreated
         - event: ProfileMetadataSet(indexed uint256,string,address,uint256)
           handler: handleProfileMetadataSet
         - event: QuoteCreated((uint256,string,uint256,uint256,uint256[],uint256[],bytes,address[],bytes[],address,bytes),indexed uint256,bytes,bytes[],bytes,address,uint256)
@@ -51,3 +48,23 @@ dataSources:
         - event: Unfollowed(indexed uint256,uint256,address,uint256)
           handler: handleUnfollowed
       file: ./src/transparent-upgradeable-proxy.ts
+  - kind: ethereum
+    name: TransparentUpgradeableProxyHandles
+    network: matic
+    source:
+      address: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945"
+      abi: TransparentUpgradeableProxy
+      startBlock: 28384640
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ProfileCreated
+      abis:
+        - name: TransparentUpgradeableProxy
+          file: ./abis/TransparentUpgradeableProxyHandles.json
+      eventHandlers:
+        - event: ProfileCreated(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleProfileCreated
+      file: ./src/transparent-upgradeable-proxy-handles.ts

@@ -4,7 +4,6 @@ import {
   Followed as FollowedEvent,
   MirrorCreated as MirrorCreatedEvent,
   PostCreated as PostCreatedEvent,
-  ProfileCreated as ProfileCreatedEvent,
   ProfileMetadataSet as ProfileMetadataSetEvent,
   QuoteCreated as QuoteCreatedEvent,
   Unblocked as UnblockedEvent,
@@ -16,7 +15,6 @@ import {
   Followed,
   MirrorCreated,
   PostCreated,
-  ProfileCreated,
   ProfileMetadataSet,
   QuoteCreated,
   Unblocked,
@@ -96,21 +94,6 @@ export function handlePostCreated(event: PostCreatedEvent): void {
   entity.postParams_profileId = event.params.postParams.profileId
   entity.postParams_contentURI = event.params.postParams.contentURI
   entity.pubId = event.params.pubId
-  entity.timestamp = event.params.timestamp
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleProfileCreated(event: ProfileCreatedEvent): void {
-  let entity = new ProfileCreated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.profileId = event.params.profileId
-  entity.creator = event.params.creator
   entity.timestamp = event.params.timestamp
 
   entity.blockNumber = event.block.number
