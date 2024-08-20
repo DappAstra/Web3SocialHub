@@ -1,0 +1,32 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: TokenHandleRegistry
+    network: matic
+    source:
+      address: "0x52fa68D73C83df39B9a637F82361d9b70aAb74F4"
+      abi: TokenHandleRegistry
+      startBlock: 60600000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - HandleLinked
+        - HandleUnlinked
+        - NonceUpdated
+      abis:
+        - name: TokenHandleRegistry
+          file: ./abis/TokenHandleRegistry.json
+      eventHandlers:
+        - event: HandleLinked((uint256,address),(uint256,address),address,uint256)
+          handler: handleHandleLinked
+        - event: HandleUnlinked((uint256,address),(uint256,address),address,uint256)
+          handler: handleHandleUnlinked
+        - event: NonceUpdated(indexed address,uint256,uint256)
+          handler: handleNonceUpdated
+      file: ./src/token-handle-registry.ts
