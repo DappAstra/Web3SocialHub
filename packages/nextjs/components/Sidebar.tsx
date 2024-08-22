@@ -1,5 +1,7 @@
-import React from "react";
+import React, { SetStateAction } from "react";
+import { Dispatch } from "react";
 import Link from "next/link";
+import { LensProfile } from "../types/utils";
 import { FaBell, FaBookmark, FaBrush, FaCompass, FaEnvelope, FaHome } from "react-icons/fa";
 import { MdSettings } from "react-icons/md";
 
@@ -34,7 +36,12 @@ const links = [
   },
 ];
 
-const Sidebar = () => {
+type SidebarProps = {
+  userMetadata: LensProfile | null;
+  setMenu: Dispatch<SetStateAction<string>>;
+};
+
+const Sidebar: React.FC<SidebarProps> = ({ userMetadata, setMenu }) => {
   return (
     <div className="leftSection">
       <div className="userProfileWidget">
@@ -43,16 +50,16 @@ const Sidebar = () => {
         </div>
         <div className="userDetails">
           <Link href={"/Profile"} className="name">
-            John Doe
+            {userMetadata?.name}
           </Link>
-          <div className="username">@johndoe</div>
+          <div className="username">{`@${userMetadata?.id}`}</div>
         </div>
       </div>
 
       <div className="inSidebar">
         {links.map((link, index) => {
           return (
-            <div className="link" key={index}>
+            <div className="link" key={index} onClick={() => setMenu(`/${link.name}`)}>
               <div className="icon">{link.icon}</div>
               <h3>{link.name}</h3>
             </div>
@@ -60,9 +67,9 @@ const Sidebar = () => {
         })}
       </div>
 
-      <label htmlFor="createNewPost" className="inBtn sidebarCreateBtn">
+      {/* <label htmlFor="createNewPost" className="inBtn sidebarCreateBtn">
         Create Post
-      </label>
+      </label> */}
     </div>
   );
 };

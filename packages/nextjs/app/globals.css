@@ -121,6 +121,10 @@ body {
   @apply flex items-center justify-between py-2 mx-2 hover:bg-gray-100 rounded-lg cursor-pointer;
 }
 
+.linksWrapper .link .name {
+  @apply text-gray-800 hover:text-primary;
+}
+
 .linksWrapper .link .leftSide {
   @apply flex items-center;
 }

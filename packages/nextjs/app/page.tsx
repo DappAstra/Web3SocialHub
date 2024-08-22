@@ -8,18 +8,31 @@ import { BsFillCameraVideoFill } from "react-icons/bs";
 import { MdEmojiEmotions, MdInsertPhoto } from "react-icons/md";
 import Navbar from "~~/components/Navbar";
 import Post from "~~/components/Post";
+import PostReal from "~~/components/PostReal";
 import Sidebar from "~~/components/Sidebar";
+import { useFollowersPosts } from "~~/hooks/graphQL/useFollowersPosts";
+import { useUserFollowers } from "~~/hooks/graphQL/useUserFollowers";
+import { useUserMetadata } from "~~/hooks/graphQL/useUserMetadata";
+import { useUserPosts } from "~~/hooks/graphQL/useUserPosts";
 
 const Home: NextPage = () => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [menu, setMenu] = useState<string>("/Explore");
   const ref = useClickOutside(() => setIsFocused(false));
+
+  const { userMetadata } = useUserMetadata(1);
+  const { userPosts } = useUserPosts();
+  const { followers } = useUserFollowers();
+  const { followersPosts } = useFollowersPosts(followers);
+  console.log(followersPosts, "@@@@followersPosts");
+  console.log(userMetadata, "@@@@userMetadata");
 
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-2">
-        <Navbar />
+        <Navbar userMetadata={userMetadata} />
         <div className="mainContainer">
-          <Sidebar />
+          <Sidebar userMetadata={userMetadata} setMenu={setMenu} />
 
           <div className="mainSection">
             <div className="storiesWrapper">
@@ -36,12 +49,13 @@ const Home: NextPage = () => {
                 })}
               </div>
             </div>
+
             <div ref={ref} className={`createPostWidget ${isFocused ? "active" : ""}`}>
               <div className="createInput">
                 <img src="/assets/avatar_default.jpg" alt="" />
                 <input
                   type="text"
-                  placeholder="What's on your mind, Jhon Doe?"
+                  placeholder={`What's on your mind, ${userMetadata?.name}?`}
                   id="createNewPost"
                   onFocus={() => setIsFocused(true)}
                 />
@@ -62,9 +76,15 @@ const Home: NextPage = () => {
                 </div>
               </div>
             </div>
-            {userData.map((user, index) => {
-              return <Post key={index} userData={user} />;
-            })}
+
+            {menu === "/Home" &&
+              userPosts.map((user, index) => {
+                return <PostReal key={index} userData={user} userProfilePic="/assets/avatar_default.jpg" />;
+              })}
+            {menu === "/Explore" &&
+              userData.map((user, index) => {
+                return <Post key={index} userData={user} />;
+              })}
           </div>
 
           <div className="rightSection">

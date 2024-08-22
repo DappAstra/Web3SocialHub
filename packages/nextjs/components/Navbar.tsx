@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { LensProfile } from "../types/utils";
 import { useClickOutside } from "@mantine/hooks";
 import { motion } from "framer-motion";
 import { FaAngleRight } from "react-icons/fa";
@@ -10,7 +11,11 @@ import { MdClose, MdSearch, MdSettings } from "react-icons/md";
 import { RiQuestionFill } from "react-icons/ri";
 import userData, { UserData } from "~~/app/UserData";
 
-const Navbar = () => {
+type NavbarProps = {
+  userMetadata: LensProfile | null;
+};
+
+const Navbar: React.FC<NavbarProps> = ({ userMetadata }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const ref = useClickOutside(() => setIsFocused(false));
   const [searchValue, setSearchValue] = useState<string>("");
@@ -116,9 +121,9 @@ const Navbar = () => {
           <div className="mobileSearchBtn" onClick={() => setSearchPanel(true)}>
             <MdSearch />
           </div>
-          <label className="inBtn" htmlFor="createNewPost">
+          {/* <label className="inBtn" htmlFor="createNewPost">
             Create
-          </label>
+          </label> */}
           <div className="userProfile">
             <div className="userImage" onClick={() => setProfileMenu(!ProfileMenu)}>
               <img src={"/assets/avatar_default.jpg"} alt="User Profile Pic" />
@@ -135,9 +140,9 @@ const Navbar = () => {
               transition={{ duration: 0.48 }}
             >
               <div className="profileWrapper">
-                <img src={"/assets/image/avatar_default.jpg"} alt="User Profile Pic" />
+                <img src={"/assets/avatar_default.jpg"} alt="User Profile Pic" />
                 <div className="profileData">
-                  <div className="name">John Doe</div>
+                  <div className="name">{userMetadata?.name}</div>
                   <span className="seeProfile">See Profile</span>
                 </div>
               </div>
