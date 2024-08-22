@@ -10,7 +10,7 @@ dataSources:
     source:
       address: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d"
       abi: TransparentUpgradeableProxy
-      startBlock: 28384640
+      startBlock: 60000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -49,22 +49,37 @@ dataSources:
           handler: handleUnfollowed
       file: ./src/transparent-upgradeable-proxy.ts
   - kind: ethereum
-    name: TransparentUpgradeableProxyHandles
+    name: LensHandles
     network: matic
     source:
       address: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945"
-      abi: TransparentUpgradeableProxy
-      startBlock: 28384640
+      abi: LensHandles
+      startBlock: 60000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ProfileCreated
+        - Approval
+        - ApprovalForAll
+        - BatchMetadataUpdate
+        - HandleMinted
+        - TokenGuardianStateChanged
+        - Transfer
       abis:
-        - name: TransparentUpgradeableProxy
-          file: ./abis/TransparentUpgradeableProxyHandles.json
+        - name: LensHandles
+          file: ./abis/LensHandles.json
       eventHandlers:
-        - event: ProfileCreated(indexed uint256,indexed address,indexed address,uint256)
-          handler: handleProfileCreated
-      file: ./src/transparent-upgradeable-proxy-handles.ts
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: HandleMinted(string,string,uint256,address,uint256)
+          handler: handleHandleMinted
+        - event: TokenGuardianStateChanged(indexed address,indexed bool,uint256,uint256)
+          handler: handleTokenGuardianStateChanged
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/lens-handles.ts

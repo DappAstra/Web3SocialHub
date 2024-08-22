@@ -1,0 +1,3 @@
+[submodule "lens_core"]
+	path = lens_core
+	url = https://github.com/lens-protocol/core/

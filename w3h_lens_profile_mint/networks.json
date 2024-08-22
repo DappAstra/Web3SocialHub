@@ -1,8 +1,0 @@
-{
-  "matic": {
-    "TokenHandleRegistry": {
-      "address": "0x52fa68D73C83df39B9a637F82361d9b70aAb74F4",
-      "startBlock": 60600000
-    }
-  }
-}
