@@ -10,7 +10,7 @@ dataSources:
     source:
       address: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d"
       abi: TransparentUpgradeableProxy
-      startBlock: 60000000
+      startBlock: 28384641
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -54,7 +54,7 @@ dataSources:
     source:
       address: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945"
       abi: LensHandles
-      startBlock: 60000000
+      startBlock: 28384641
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

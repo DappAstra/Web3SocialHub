@@ -2,7 +2,7 @@
   "optimism": {
     "WritingEditionsFactory": {
       "address": "0x89C8bEb94766F713EfFfcD07A0f30cd26e40e425",
-      "startBlock": 112668973
+      "startBlock": 0
     }
   }
 }
