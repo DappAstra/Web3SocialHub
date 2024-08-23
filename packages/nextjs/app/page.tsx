@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import userData from "./UserData";
+// import userData from "./UserData";
 import { useClickOutside } from "@mantine/hooks";
 import type { NextPage } from "next";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import { MdEmojiEmotions, MdInsertPhoto } from "react-icons/md";
 import Navbar from "~~/components/Navbar";
-import Post from "~~/components/Post";
 import PostReal from "~~/components/PostReal";
 import Sidebar from "~~/components/Sidebar";
 import { useFollowersPosts } from "~~/hooks/graphQL/useFollowersPosts";
@@ -20,12 +19,10 @@ const Home: NextPage = () => {
   const [menu, setMenu] = useState<string>("/Explore");
   const ref = useClickOutside(() => setIsFocused(false));
 
-  const { userMetadata } = useUserMetadata(1);
+  const { userMetadata, loading: loadingUserMetadata } = useUserMetadata(1);
   const { userPosts } = useUserPosts();
   const { followers } = useUserFollowers();
   const { followersPosts } = useFollowersPosts(followers);
-  console.log(followersPosts, "@@@@followersPosts");
-  console.log(userMetadata, "@@@@userMetadata");
 
   return (
     <>
@@ -35,7 +32,7 @@ const Home: NextPage = () => {
           <Sidebar userMetadata={userMetadata} setMenu={setMenu} />
 
           <div className="mainSection">
-            <div className="storiesWrapper">
+            {/* <div className="storiesWrapper">
               <div className="storiesWidget">
                 {userData.map((user, index) => {
                   return (
@@ -48,42 +45,47 @@ const Home: NextPage = () => {
                   );
                 })}
               </div>
-            </div>
+            </div> */}
 
-            <div ref={ref} className={`createPostWidget ${isFocused ? "active" : ""}`}>
-              <div className="createInput">
-                <img src="/assets/avatar_default.jpg" alt="" />
-                <input
-                  type="text"
-                  placeholder={`What's on your mind, ${userMetadata?.name}?`}
-                  id="createNewPost"
-                  onFocus={() => setIsFocused(true)}
-                />
-                <button className="inBtn">Post</button>
+            {!loadingUserMetadata && (
+              <div ref={ref} className={`createPostWidget ${isFocused ? "active" : ""}`}>
+                <div className="createInput">
+                  <img src="/assets/avatar_default.jpg" alt="" />
+                  <input
+                    type="text"
+                    placeholder={`What's on your mind, ${userMetadata?.name}?`}
+                    id="createNewPost"
+                    onFocus={() => setIsFocused(true)}
+                  />
+                  <button className="inBtn">Post</button>
+                </div>
+                <div className="otherOptions">
+                  <div className="option">
+                    <BsFillCameraVideoFill />
+                    <span>Go Live</span>
+                  </div>
+                  <div className="option">
+                    <MdInsertPhoto />
+                    <span>Photo/Video</span>
+                  </div>
+                  <div className="option">
+                    <MdEmojiEmotions />
+                    <span>Feeling/Activity</span>
+                  </div>
+                </div>
               </div>
-              <div className="otherOptions">
-                <div className="option">
-                  <BsFillCameraVideoFill />
-                  <span>Go Live</span>
-                </div>
-                <div className="option">
-                  <MdInsertPhoto />
-                  <span>Photo/Video</span>
-                </div>
-                <div className="option">
-                  <MdEmojiEmotions />
-                  <span>Feeling/Activity</span>
-                </div>
-              </div>
-            </div>
+            )}
 
             {menu === "/Home" &&
               userPosts.map((user, index) => {
                 return <PostReal key={index} userData={user} userProfilePic="/assets/avatar_default.jpg" />;
               })}
             {menu === "/Explore" &&
-              userData.map((user, index) => {
-                return <Post key={index} userData={user} />;
+              Object.keys(followersPosts).map(userId => {
+                const userData = followersPosts[userId];
+                return userData.map((user, index) => {
+                  return <PostReal key={index} userData={user} userProfilePic="/assets/avatar_default.jpg" />;
+                });
               })}
           </div>
 
