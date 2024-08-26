@@ -1,0 +1,41 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: LensHandles
+    network: matic
+    source:
+      address: "0xcE557F3DDfBd1B87074E4386cd98D6B8E80997ED"
+      abi: LensHandles
+      startBlock: 60000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - BatchMetadataUpdate
+        - HandleMinted
+        - TokenGuardianStateChanged
+        - Transfer
+      abis:
+        - name: LensHandles
+          file: ./abis/LensHandles.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: HandleMinted(string,string,uint256,address,uint256)
+          handler: handleHandleMinted
+        - event: TokenGuardianStateChanged(indexed address,indexed bool,uint256,uint256)
+          handler: handleTokenGuardianStateChanged
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/lens-handles.ts
