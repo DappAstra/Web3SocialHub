@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MirrorABI from "../../../../abis/MirrorPosts.json";
+import MirrorABI from "../../utils/abis/MirrorPosts.json";
 import Arweave from "arweave";
 import { useReadContracts } from "wagmi";
 import { fetchWritingEditionPurchaseds } from "~~/utils/subgraph/mirrorApolloClient";
