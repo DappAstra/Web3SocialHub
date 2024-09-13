@@ -22,7 +22,7 @@ export interface PostEncode {
   postParams_contentURI: string;
 }
 
-export interface Post {
+export interface ILensPost {
   description: string;
   external_url: string;
   name: string;
@@ -44,6 +44,43 @@ export interface Post {
       type: string;
       cover: string;
     }>;
+  };
+}
+
+export interface IMirrorPost {
+  authorship: {
+    algorithm: {
+      name: string;
+      hash: string;
+    };
+    contributor: string;
+    signature: string;
+    signingKey: string;
+    signingMessageKey: string;
+    signingMessageSignature: string;
+  };
+  content: {
+    body: string;
+    timestamp: string;
+    title: string;
+  };
+  digest: string;
+  version: string;
+  wnft: {
+    chainId: number;
+    description: string;
+    fundingRecipient: string;
+    hasCustomWnftMedia: boolean;
+    imageURI: string;
+    mediaAssetId: number;
+    name: string;
+    nonce: number;
+    owner: string;
+    price: number;
+    proxyAddress: string;
+    renderer: string;
+    supply: number;
+    symbol: string;
   };
 }
 

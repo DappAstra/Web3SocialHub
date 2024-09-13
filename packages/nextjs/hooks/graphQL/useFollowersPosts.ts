@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Arweave from "arweave";
-import { Post, PostEncode } from "~~/types/utils";
-import { fetchPostsCreateds } from "~~/utils/subgraph/graphqlClient";
+import { ILensPost, PostEncode } from "~~/types/utils";
+import { fetchPostsCreateds } from "~~/utils/subgraph/lensApolloClient";
 
 export const useFollowersPosts = (followers: string[]) => {
-  const [followersPosts, setFollowersPosts] = useState<{ [key: string]: Post[] }>({});
+  const [followersPosts, setFollowersPosts] = useState<{ [key: string]: ILensPost[] }>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +25,7 @@ export const useFollowersPosts = (followers: string[]) => {
               const data = await arweave.transactions.getData(transactionId, { decode: true, string: true });
 
               if (typeof data === "string") {
-                return JSON.parse(data) as Post;
+                return JSON.parse(data) as ILensPost;
               } else {
                 console.error("Received data is not a string, cannot parse JSON");
                 return null;
@@ -59,7 +59,7 @@ export const useFollowersPosts = (followers: string[]) => {
             }
             return acc;
           },
-          {} as { [key: string]: Post[] },
+          {} as { [key: string]: ILensPost[] },
         );
 
         setFollowersPosts(followersPostsData);

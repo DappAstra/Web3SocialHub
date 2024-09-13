@@ -37,11 +37,11 @@ export const fetchPostsCreated = async (first: number) => {
     `,
     variables: { first },
   });
-  console.log(data, "@@@@data");
+
   return data;
 };
 
-export const fetchProfileMetadataSets = async (profileId: number) => {
+export const fetchProfileMetadataSets = async (profileId: number | null) => {
   const { data } = await client.query({
     query: gql`
       query ProfileMetadataSets($profileId: Int!) {
@@ -58,7 +58,7 @@ export const fetchProfileMetadataSets = async (profileId: number) => {
   return data;
 };
 
-export const fetchPostsCreateds = async (profileId: number) => {
+export const fetchPostsCreateds = async (profileId: number | null) => {
   const { data } = await client.query({
     query: gql`
       query PostsCreateds($profileId: Int!) {
@@ -73,7 +73,7 @@ export const fetchPostsCreateds = async (profileId: number) => {
   return data;
 };
 
-export const fetchFollowers = async (profileId: number) => {
+export const fetchFollowers = async (profileId: number | null) => {
   const { data } = await client.query({
     query: gql`
       query Followeds($profileId: Int!) {
@@ -86,4 +86,24 @@ export const fetchFollowers = async (profileId: number) => {
   });
 
   return data;
+};
+
+export const fetchTransfersFrom = async (address: string | undefined) => {
+  try {
+    const { data } = await client.query({
+      query: gql`
+        query TransfersFrom($address: String!) {
+          transfers(where: { to: $address }, orderDirection: desc, orderBy: blockNumber) {
+            tokenId
+            profileId
+            blockNumber
+          }
+        }
+      `,
+      variables: { address },
+    });
+    return data;
+  } catch (error) {
+    throw new Error("Failed to fetch transfers");
+  }
 };

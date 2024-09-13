@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Arweave from "arweave";
 import { LensProfile } from "~~/types/utils";
-import { fetchProfileMetadataSets } from "~~/utils/subgraph/graphqlClient";
+import { fetchProfileMetadataSets } from "~~/utils/subgraph/lensApolloClient";
 
-export const useUserMetadata = (userProfileId: number) => {
+export const useUserMetadata = (userProfileId: number | null) => {
   const [userMetadata, setUserMetadata] = useState<LensProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

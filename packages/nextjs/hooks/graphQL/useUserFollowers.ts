@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Follower } from "~~/types/utils";
-import { fetchFollowers } from "~~/utils/subgraph/graphqlClient";
+import { fetchFollowers } from "~~/utils/subgraph/lensApolloClient";
 
-export const useUserFollowers = () => {
+export const useUserFollowers = (userProfileId: number | null) => {
   const [followers, setFollowers] = useState<[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -10,7 +10,7 @@ export const useUserFollowers = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { followeds } = await fetchFollowers(1);
+        const { followeds } = await fetchFollowers(userProfileId);
         const data = followeds.reduce((acc: string[], follower: Follower) => {
           if (follower?.followerProfileId) acc.push(follower.followerProfileId);
           return acc;

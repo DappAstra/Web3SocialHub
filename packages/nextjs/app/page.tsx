@@ -1,28 +1,37 @@
 "use client";
 
 import { useState } from "react";
-// import userData from "./UserData";
 import { useClickOutside } from "@mantine/hooks";
 import type { NextPage } from "next";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import { MdEmojiEmotions, MdInsertPhoto } from "react-icons/md";
+import LensPost from "~~/components/LensPost";
+import MirrorPost from "~~/components/MirrorPost";
 import Navbar from "~~/components/Navbar";
-import PostReal from "~~/components/PostReal";
 import Sidebar from "~~/components/Sidebar";
+import Spinner from "~~/components/Spinner";
 import { useFollowersPosts } from "~~/hooks/graphQL/useFollowersPosts";
 import { useUserFollowers } from "~~/hooks/graphQL/useUserFollowers";
 import { useUserMetadata } from "~~/hooks/graphQL/useUserMetadata";
 import { useUserPosts } from "~~/hooks/graphQL/useUserPosts";
+import { useWritingEditionPurchased } from "~~/hooks/graphQL/useWritingEditionPurchased";
+import { getIpfsUrl } from "~~/utils/ipfs/getIpfsUrl";
 
 const Home: NextPage = () => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [menu, setMenu] = useState<string>("/Explore");
+  const [menu, setMenu] = useState<string>("/Your Lens");
   const ref = useClickOutside(() => setIsFocused(false));
 
+  // Lens
   const { userMetadata, loading: loadingUserMetadata } = useUserMetadata(1);
-  const { userPosts } = useUserPosts();
-  const { followers } = useUserFollowers();
-  const { followersPosts } = useFollowersPosts(followers);
+  const { userPosts, loading: loadingUserPosts } = useUserPosts(1);
+  const { followers } = useUserFollowers(1);
+  const { followersPosts, loading: loadingFollowersPosts } = useFollowersPosts(followers);
+
+  // Mirror
+  const { posts: mirrorPosts, loading: loadingMirrorPosts } = useWritingEditionPurchased();
+
+  const profilePicture = userMetadata?.picture ? getIpfsUrl(userMetadata?.picture) : "/assets/avatar_default.jpg";
 
   return (
     <>
@@ -32,28 +41,15 @@ const Home: NextPage = () => {
           <Sidebar userMetadata={userMetadata} setMenu={setMenu} />
 
           <div className="mainSection">
-            {/* <div className="storiesWrapper">
-              <div className="storiesWidget">
-                {userData.map((user, index) => {
-                  return (
-                    <div className="story" key={index}>
-                      <div className="overlay"></div>
-                      <img src={`${user.storyImage}`} alt="" />
-                      <img src={`${user.profilePic}`} alt="" className="profileImage" />
-                      <div className="name">{user.name}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div> */}
-
-            {!loadingUserMetadata && (
+            {
               <div ref={ref} className={`createPostWidget ${isFocused ? "active" : ""}`}>
                 <div className="createInput">
-                  <img src="/assets/avatar_default.jpg" alt="" />
+                  <img src={profilePicture} alt="" />
                   <input
                     type="text"
-                    placeholder={`What's on your mind, ${userMetadata?.name}?`}
+                    placeholder={
+                      loadingUserMetadata ? "What's on your mind?" : `What's on your mind, ${userMetadata?.name}?`
+                    }
                     id="createNewPost"
                     onFocus={() => setIsFocused(true)}
                   />
@@ -74,19 +70,49 @@ const Home: NextPage = () => {
                   </div>
                 </div>
               </div>
+            }
+
+            {/* Lens - Your Posts */}
+            {menu === "/Your Lens" && (
+              <>
+                {loadingUserPosts ? (
+                  <Spinner />
+                ) : (
+                  userPosts.map((user, index) => {
+                    return <LensPost key={index} userData={user} userProfilePic={profilePicture} />;
+                  })
+                )}
+              </>
             )}
 
-            {menu === "/Home" &&
-              userPosts.map((user, index) => {
-                return <PostReal key={index} userData={user} userProfilePic="/assets/avatar_default.jpg" />;
-              })}
-            {menu === "/Explore" &&
-              Object.keys(followersPosts).map(userId => {
-                const userData = followersPosts[userId];
-                return userData.map((user, index) => {
-                  return <PostReal key={index} userData={user} userProfilePic="/assets/avatar_default.jpg" />;
-                });
-              })}
+            {/* Lens - Follower's Posts */}
+            {menu === "/Other's Lens" && (
+              <>
+                {loadingFollowersPosts ? (
+                  <Spinner />
+                ) : (
+                  Object.keys(followersPosts).map(userId => {
+                    const userData = followersPosts[userId];
+                    return userData.map((user, index) => {
+                      return <LensPost key={index} userData={user} userProfilePic={profilePicture} />;
+                    });
+                  })
+                )}
+              </>
+            )}
+
+            {/* Mirror Posts */}
+            {menu === "/Mirror" && (
+              <>
+                {loadingMirrorPosts ? (
+                  <Spinner />
+                ) : (
+                  mirrorPosts.map((post, index) => {
+                    return <MirrorPost key={index} post={post} userProfilePic={profilePicture} />;
+                  })
+                )}
+              </>
+            )}
           </div>
 
           <div className="rightSection">
@@ -110,12 +136,7 @@ const Home: NextPage = () => {
               <div className="requestProfile">
                 <div className="details">
                   <div className="profileImage">
-                    <img
-                      src={
-                        "https://images.unsplash.com/photo-1505695716405-61e75ecc5bab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Z2lybCxib3l8fHx8fHwxNjg5NzcxMTE5&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"
-                      }
-                      alt=""
-                    />
+                    <img src={"/assets/avatar_default.jpg"} alt="" />
                   </div>
                   <div className="userDetails">
                     <div className="name">Phillip Tønder</div>

@@ -3,10 +3,11 @@ import { motion } from "framer-motion";
 import { FaEllipsisH } from "react-icons/fa";
 import { HiOutlineShare } from "react-icons/hi";
 import { HiOutlineBookmark, HiOutlineChatBubbleOvalLeftEllipsis, HiOutlineHeart } from "react-icons/hi2";
-import { Post } from "~~/types/utils";
+import { IMirrorPost } from "~~/types/utils";
+import { getIpfsUrl } from "~~/utils/ipfs/getIpfsUrl";
 
 type PostProps = {
-  userData: Post;
+  post: IMirrorPost;
   userProfilePic: string;
 };
 
@@ -28,18 +29,8 @@ const linkifyText = (text: string) => {
   });
 };
 
-const PostReal: React.FC<PostProps> = ({ userData, userProfilePic }) => {
+const MirrorPost: React.FC<PostProps> = ({ post, userProfilePic }) => {
   const [open, setOpen] = useState(false);
-
-  // Function to convert IPFS link to HTTP gateway link
-  const getIpfsUrl = (ipfsUrl: string) => {
-    if (ipfsUrl.startsWith("ipfs://")) {
-      return ipfsUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
-    }
-    return ipfsUrl; // In case it's already a valid URL
-  };
-
-  const imageUrl = getIpfsUrl(userData?.animation_url || "");
 
   return (
     <>
@@ -48,10 +39,8 @@ const PostReal: React.FC<PostProps> = ({ userData, userProfilePic }) => {
           <div className="flex items-center">
             <img src={userProfilePic} alt="" className="object-cover w-[2.8rem] h-[2.8rem] rounded-full" />
             <div className="ml-3">
-              <div className="font-semibold text-gray-600 hover:text-primary cursor-pointer">
-                {userData?.lens.appId}
-              </div>
-              <div className="text-xs text-gray-600">{userData?.name}</div>
+              <div className="font-semibold text-gray-600 hover:text-primary cursor-pointer">{post?.content.title}</div>
+              <div className="text-xs text-gray-600">{post?.authorship.contributor}</div>
             </div>
           </div>
           <div className="ml-3">
@@ -61,11 +50,11 @@ const PostReal: React.FC<PostProps> = ({ userData, userProfilePic }) => {
           </div>
         </div>
         <div className="flex justify-center">
-          <div className="text-xs text-gray-600 whitespace-pre-wrap">{linkifyText(userData?.description || "")}</div>
+          <div className="text-xs text-gray-600 whitespace-pre-wrap">{linkifyText(post?.content.body || "")}</div>
         </div>
         <div className="flex justify-center">
           <motion.img
-            src={imageUrl}
+            src={getIpfsUrl(post?.wnft.imageURI)}
             alt=""
             className="max-w-full max-h-[20rem] my-4 rounded-xl w-full h-full object-cover"
             onClick={() => setOpen(!open)}
@@ -100,4 +89,4 @@ const PostReal: React.FC<PostProps> = ({ userData, userProfilePic }) => {
   );
 };
 
-export default PostReal;
+export default MirrorPost;

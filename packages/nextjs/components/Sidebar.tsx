@@ -2,37 +2,21 @@ import React, { SetStateAction } from "react";
 import { Dispatch } from "react";
 import Link from "next/link";
 import { LensProfile } from "../types/utils";
-import { FaBell, FaBookmark, FaBrush, FaCompass, FaEnvelope, FaHome } from "react-icons/fa";
-import { MdSettings } from "react-icons/md";
+import { FaCompass, FaHome, FaWallet } from "react-icons/fa";
+import { getIpfsUrl } from "~~/utils/ipfs/getIpfsUrl";
 
 const links = [
   {
-    name: "Home",
+    name: "Your Lens",
     icon: <FaHome />,
   },
   {
-    name: "Explore",
+    name: "Other's Lens",
     icon: <FaCompass />,
   },
   {
-    name: "Notifications",
-    icon: <FaBell />,
-  },
-  {
-    name: "Messages",
-    icon: <FaEnvelope />,
-  },
-  {
-    name: "Bookmarks",
-    icon: <FaBookmark />,
-  },
-  {
-    name: "Theme",
-    icon: <FaBrush />,
-  },
-  {
-    name: "Settings",
-    icon: <MdSettings />,
+    name: "Mirror",
+    icon: <FaWallet />,
   },
 ];
 
@@ -42,17 +26,19 @@ type SidebarProps = {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ userMetadata, setMenu }) => {
+  const profileImageSrc = userMetadata?.picture ? getIpfsUrl(userMetadata.picture) : "/assets/avatar_default.jpg";
+
   return (
     <div className="leftSection">
       <div className="userProfileWidget">
         <div className="profileImage">
-          <img src={"/assets/avatar_default.jpg"} alt="" />
+          <img src={profileImageSrc} alt="" />
         </div>
         <div className="userDetails">
           <Link href={"/Profile"} className="name">
             {userMetadata?.name}
           </Link>
-          <div className="username">{`@${userMetadata?.id}`}</div>
+          <div className="username">{userMetadata?.bio}</div>
         </div>
       </div>
 
@@ -67,9 +53,9 @@ const Sidebar: React.FC<SidebarProps> = ({ userMetadata, setMenu }) => {
         })}
       </div>
 
-      {/* <label htmlFor="createNewPost" className="inBtn sidebarCreateBtn">
-        Create Post
-      </label> */}
+      {/* <button className="inBtn sidebarCreateBtn w-full" onClick={() => setIsMirrorDSP(prev => !prev)}>
+        {isMirrorDSP ? "Lens" : "Mirror"}
+      </button> */}
     </div>
   );
 };

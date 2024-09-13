@@ -1,27 +1,29 @@
 import { useEffect, useState } from "react";
 import Arweave from "arweave";
-import { Post } from "~~/types/utils";
-import { fetchPostsCreateds } from "~~/utils/subgraph/graphqlClient";
+import { ILensPost } from "~~/types/utils";
+import { fetchPostsCreateds } from "~~/utils/subgraph/lensApolloClient";
 
-export const useUserPosts = () => {
-  const [userPosts, setUserPosts] = useState<Post[]>([]);
+export const useUserPosts = (userProfileId: number | null) => {
+  const [userPosts, setUserPosts] = useState<ILensPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const { postCreateds } = await fetchPostsCreateds(1);
+      if (userProfileId === null) return; // If no userProfileId is provided, don't make the API call
 
-        if (postCreateds[0].postParams_contentURI?.startsWith("ar://")) {
+      try {
+        setLoading(true); // Set loading state before fetching
+        const { postCreateds } = await fetchPostsCreateds(userProfileId);
+
+        if (postCreateds.length > 0 && postCreateds[0].postParams_contentURI?.startsWith("ar://")) {
           const arweave = Arweave.init({
             host: "arweave.net",
             port: 443,
             protocol: "https",
           });
 
-          // Use a for loop instead of reduce to handle asynchronous code
-          const postsData: Post[] = [];
+          const postsData: ILensPost[] = [];
 
           for (const post of postCreateds) {
             const transactionId = post?.postParams_contentURI.replace("ar://", "");
@@ -34,17 +36,19 @@ export const useUserPosts = () => {
             }
           }
 
-          if (postsData.length) setUserPosts(postsData);
+          setUserPosts(postsData);
+        } else {
+          setError("No valid posts found for this user.");
         }
       } catch (err: any) {
         setError("Error fetching data: " + err.message);
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
     fetchData();
-  }, []);
+  }, [userProfileId]); // Re-run effect if userProfileId changes
 
   return { userPosts, loading, error };
 };

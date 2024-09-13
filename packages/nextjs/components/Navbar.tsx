@@ -10,6 +10,7 @@ import { FaAngleDown, FaFaceFrown } from "react-icons/fa6";
 import { MdClose, MdSearch, MdSettings } from "react-icons/md";
 import { RiQuestionFill } from "react-icons/ri";
 import userData, { UserData } from "~~/app/UserData";
+import { getIpfsUrl } from "~~/utils/ipfs/getIpfsUrl";
 
 type NavbarProps = {
   userMetadata: LensProfile | null;
@@ -22,6 +23,8 @@ const Navbar: React.FC<NavbarProps> = ({ userMetadata }) => {
   const [ProfileMenu, setProfileMenu] = useState<boolean>(false);
   const [searchedUser, setSearchedUser] = useState<UserData[]>(userData);
   const [searchPanel, setSearchPanel] = useState<boolean>(false);
+
+  const profilePicture = userMetadata?.picture ? getIpfsUrl(userMetadata?.picture) : "/assets/avatar_default.jpg";
 
   const searchUsers = (value: string) => {
     const searchedUser = userData.filter(user => {
@@ -126,7 +129,7 @@ const Navbar: React.FC<NavbarProps> = ({ userMetadata }) => {
           </label> */}
           <div className="userProfile">
             <div className="userImage" onClick={() => setProfileMenu(!ProfileMenu)}>
-              <img src={"/assets/avatar_default.jpg"} alt="User Profile Pic" />
+              <img src={profilePicture} alt="User Profile Pic" />
             </div>
             <motion.div
               className="userProfileDropdown"
@@ -140,7 +143,7 @@ const Navbar: React.FC<NavbarProps> = ({ userMetadata }) => {
               transition={{ duration: 0.48 }}
             >
               <div className="profileWrapper">
-                <img src={"/assets/avatar_default.jpg"} alt="User Profile Pic" />
+                <img src={profilePicture} alt="User Profile Pic" />
                 <div className="profileData">
                   <div className="name">{userMetadata?.name}</div>
                   <span className="seeProfile">See Profile</span>
