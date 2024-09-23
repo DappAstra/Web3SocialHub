@@ -3,12 +3,16 @@ import {
   Transfer as TransferEvent
 } from "../generated/LensHandles/LensHandles"
 import {
-  TokenHandleRegistry
+  TokenHandleRegistry as TokenHandleRegistryContract
 } from "../generated/TokenHandleRegistry/TokenHandleRegistry"
 import {
   HandleMinted,
   Transfer
 } from "../generated/schema"
+
+import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
+
+const TOKEN_HANDLE_REGISTRY_ADDRESS = Address.fromString("0xD4F2F33680FCCb36748FA9831851643781608844")
 
 export function handleHandleMinted(event: HandleMintedEvent): void {
   let entity = new HandleMinted(
@@ -20,8 +24,14 @@ export function handleHandleMinted(event: HandleMintedEvent): void {
   entity.to = event.params.to
   entity.timestamp = event.params.timestamp
 
-  let contract = TokenHandleRegistry.bind(event.address)
-  entity.profileId = contract.resolve(event.params.handleId)
+  let contract = TokenHandleRegistryContract.bind(TOKEN_HANDLE_REGISTRY_ADDRESS)
+  let call_result = contract.try_resolve(event.params.handleId)
+  if (call_result.reverted) {
+    entity.profileId = BigInt.fromI32(0);
+  }
+  else {
+    entity.profileId = call_result.value;
+  }
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -42,8 +52,14 @@ export function handleTransfer(event: TransferEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
-  let contract = TokenHandleRegistry.bind(event.address)
-  entity.profileId = contract.resolve(event.params.tokenId)
+  let contract = TokenHandleRegistryContract.bind(TOKEN_HANDLE_REGISTRY_ADDRESS)
+  let call_result = contract.try_resolve(event.params.tokenId)
+  if (call_result.reverted) {
+    entity.profileId = BigInt.fromI32(0);
+  }
+  else {
+    entity.profileId = call_result.value;
+  }
 
 
   entity.save()
