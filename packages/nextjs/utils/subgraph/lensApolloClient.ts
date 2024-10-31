@@ -1,7 +1,8 @@
+import { LENS_SUBGRAPH_URI } from "./constants";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "https://api.studio.thegraph.com/query/81936/w3sh_lens/version/latest",
+  uri: LENS_SUBGRAPH_URI,
   cache: new InMemoryCache(),
 });
 
@@ -42,32 +43,41 @@ export const fetchPostsCreated = async (first: number) => {
 };
 
 export const fetchProfileMetadataSets = async (profileId: number | null) => {
-  const { data } = await client.query({
-    query: gql`
-      query ProfileMetadataSets($profileId: Int!) {
-        profileMetadataSets(where: { profileId: $profileId }, orderBy: blockNumber, orderDirection: desc) {
-          metadata
-          profileId
-          blockNumber
+  try {
+    const { data } = await client.query({
+      query: gql`
+        query ProfileMetadataSets($profileId: Int!) {
+          profileMetadataSets(where: { profileId: $profileId }, orderBy: blockNumber, orderDirection: desc) {
+            metadata
+            profileId
+            blockNumber
+          }
         }
-      }
-    `,
-    variables: { profileId },
-  });
-
-  return data;
+      `,
+      variables: { profileId },
+    });
+    return data;
+  } catch (error) {
+    throw new Error("Failed to fetch user profile info.");
+  }
 };
 
-export const fetchPostsCreateds = async (profileId: number | null) => {
+export const fetchPostsCreateds = async (profileId: number | null, skip = 0, first = 10) => {
   const { data } = await client.query({
     query: gql`
-      query PostsCreateds($profileId: Int!) {
-        postCreateds(where: { postParams_profileId: $profileId }, orderBy: blockNumber, orderDirection: desc) {
+      query PostsCreateds($profileId: Int!, $skip: Int!, $first: Int!) {
+        postCreateds(
+          where: { postParams_profileId: $profileId }
+          orderBy: blockNumber
+          orderDirection: desc
+          skip: $skip
+          first: $first
+        ) {
           postParams_contentURI
         }
       }
     `,
-    variables: { profileId },
+    variables: { profileId, skip, first },
   });
 
   return data;

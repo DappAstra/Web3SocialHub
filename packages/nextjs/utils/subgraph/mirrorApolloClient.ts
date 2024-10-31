@@ -1,7 +1,8 @@
+import { MIRROR_SUBGRAPH_URI } from "./constants";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "https://api.studio.thegraph.com/query/81936/w3sh_mirror_optimism/version/latest",
+  uri: MIRROR_SUBGRAPH_URI,
   cache: new InMemoryCache(),
 });
 
@@ -19,7 +20,6 @@ export const fetchWritingEditionPurchaseds = async (first: number | undefined) =
     });
     return data;
   } catch (error) {
-    console.log(error, "@@@@error");
     throw new Error("Failed to fetch writing edition purchased");
   }
 };

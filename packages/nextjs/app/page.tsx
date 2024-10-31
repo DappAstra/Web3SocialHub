@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useClickOutside } from "@mantine/hooks";
 import type { NextPage } from "next";
 import { BsFillCameraVideoFill } from "react-icons/bs";
@@ -24,14 +24,45 @@ const Home: NextPage = () => {
 
   // Lens
   const { userMetadata, loading: loadingUserMetadata } = useUserMetadata(1);
-  const { userPosts, loading: loadingUserPosts } = useUserPosts(1);
+  const { userPosts, loading: loadingUserPosts, hasMore, loadMorePosts } = useUserPosts(1);
   const { followers } = useUserFollowers(1);
   const { followersPosts, loading: loadingFollowersPosts } = useFollowersPosts(followers);
+
+  console.log(userMetadata, "@@@@userMetadata");
 
   // Mirror
   const { posts: mirrorPosts, loading: loadingMirrorPosts } = useWritingEditionPurchased();
 
   const profilePicture = userMetadata?.picture ? getIpfsUrl(userMetadata?.picture) : "/assets/avatar_default.jpg";
+
+  // Infinite Scroll Observer
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const target = entries[0];
+      if (target.isIntersecting && hasMore) {
+        loadMorePosts();
+      }
+    },
+    [hasMore, loadMorePosts],
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, { threshold: 1.0 });
+    if (observerRef.current) observer.unobserve(observerRef.current);
+  }, [handleObserver]);
+
+  if (!userMetadata)
+    return (
+      <>
+        <div className="flex items-center flex-col flex-grow pt-2">
+          <Navbar userMetadata={userMetadata} />
+          <div className="mainContainer">
+            <Spinner />
+          </div>
+        </div>
+      </>
+    );
 
   return (
     <>
@@ -75,13 +106,14 @@ const Home: NextPage = () => {
             {/* Lens - Your Posts */}
             {menu === "/Your Lens" && (
               <>
-                {loadingUserPosts ? (
-                  <Spinner />
-                ) : (
+                {!loadingUserPosts &&
                   userPosts.map((user, index) => {
                     return <LensPost key={index} userData={user} userProfilePic={profilePicture} />;
-                  })
-                )}
+                  })}
+                {loadingUserPosts && <Spinner />}
+                <div ref={observerRef} className="loading-indicator">
+                  {hasMore && !loadingUserPosts && <Spinner />}
+                </div>
               </>
             )}
 
