@@ -1,81 +1,202 @@
 # 🏗 Scaffold-ETH 2
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. Scaffold-ETH 2 simplifies smart contract development and integrates with subgraphs to make querying blockchain data seamless.
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+**Features:**
+- ✅ Contract Hot Reload for automatic frontend updates.
+- 🪝 Custom hooks for smart contract and subgraph interactions with TypeScript support.
+- 🧱 Pre-built web3 components for rapid development.
+- 🔥 Burner Wallet & Local Faucet for testing.
+- 🔐 Integration with wallet providers.
+- 🌐 **Subgraph Integration**: Showcase of backend and frontend subgraph usage.
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+---
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+## 📋 Prerequisites
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
-
-## Requirements
-
-Before you begin, you need to install the following tools:
-
-- [Node (>= v18.17)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
+Before starting, ensure the following tools are installed:
+- [Node.js (>= v18.17)](https://nodejs.org/en/download/)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install/)
 - [Git](https://git-scm.com/downloads)
 
-## Quickstart
+---
 
-To get started with Scaffold-ETH 2, follow the steps below:
+## 🚀 Quickstart
 
-1. Clone this repo & install dependencies
-
-```
+### 1. Clone the Repository and Install Dependencies
+```bash
 git clone https://github.com/scaffold-eth/scaffold-eth-2.git
 cd scaffold-eth-2
 yarn install
 ```
 
-2. Run a local network in the first terminal:
-
-```
+### 2. Start a Local Ethereum Network
+```bash
 yarn chain
 ```
+This command launches a local blockchain for testing. You can configure it in `hardhat.config.ts`.
 
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
-
-3. On a second terminal, deploy the test contract:
-
-```
+### 3. Deploy a Smart Contract
+Open a second terminal and run:
+```bash
 yarn deploy
 ```
+This deploys a sample contract located in `packages/hardhat/contracts/YourContract.sol`. You can modify this contract as needed.
 
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
-
-```
+### 4. Launch the Frontend
+Open a third terminal and run:
+```bash
 yarn start
 ```
+Visit your app at `http://localhost:3000` to interact with the deployed smart contract.
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+---
 
-**What's next**:
+## 🧩 Subgraph Integration
 
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
-- Edit your smart contract test in: `packages/hardhat/test`. To run test use `yarn hardhat:test`
+Scaffold-ETH 2 is designed to showcase **subgraph integration** as a core feature. Subgraphs are GraphQL-based APIs that index blockchain data, enabling efficient queries and interactions with decentralized protocols. This project includes examples of integrating subgraphs into both backend and frontend workflows.
 
-## Documentation
+### Subgraphs Used
+1. **Lens Subgraph**: Fetches user profiles, posts, and relationships.
+2. **Mirror Subgraph**: Fetches writing editions and purchase data.
 
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
+**GraphQL Endpoints**:
+- Lens: `https://api.studio.thegraph.com/query/81936/w3sh_lens/version/latest`
+- Mirror: `https://api.studio.thegraph.com/query/81936/w3sh_mirror_optimism/version/latest`
 
-To know more about its features, check out our [website](https://scaffoldeth.io).
+---
 
-## Contributing to Scaffold-ETH 2
+### 🛠 Backend Subgraph Integration
 
-We welcome contributions to Scaffold-ETH 2!
+#### Setting Up the Subgraph
+Subgraphs are managed using The Graph CLI. Here’s an overview of the setup process:
+1. **Define Subgraph Manifest**:
+   - Specify the blockchain network, smart contracts, and event mappings in `subgraph.yaml`.
+   ```yaml
+   dataSources:
+     - kind: ethereum
+       name: LensProtocol
+       network: mainnet
+       source:
+         address: "0x..."
+         abi: LensProtocol
+       mapping:
+         eventHandlers:
+           - event: ProfileCreated(indexed address, string)
+             handler: handleProfileCreated
+   ```
 
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+2. **Write Mappings**:
+   - Mappings are AssemblyScript functions that process raw blockchain data.
+   ```typescript
+   export function handleProfileCreated(event: ProfileCreated): void {
+     let profile = new Profile(event.params.profileId.toHex());
+     profile.owner = event.params.owner;
+     profile.createdAt = event.block.timestamp;
+     profile.save();
+   }
+   ```
+
+3. **Deploy the Subgraph**:
+   Use The Graph CLI to deploy the subgraph:
+   ```bash
+   graph deploy --studio w3sh_lens
+   ```
+
+4. **Test Queries**:
+   Use The Graph Studio’s GraphQL playground to test queries.
+
+---
+
+### 🌐 Frontend Subgraph Integration
+
+The frontend uses **Apollo Client** to interact with subgraphs. Data from Lens and Mirror subgraphs is dynamically fetched and displayed using React hooks.
+
+#### Apollo Client Setup
+Add the following configuration to interact with subgraphs:
+```typescript
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+
+const lensClient = new ApolloClient({
+  uri: "https://api.studio.thegraph.com/query/81936/w3sh_lens/version/latest",
+  cache: new InMemoryCache(),
+});
+
+const mirrorClient = new ApolloClient({
+  uri: "https://api.studio.thegraph.com/query/81936/w3sh_mirror_optimism/version/latest",
+  cache: new InMemoryCache(),
+});
+```
+
+#### Example Queries
+Fetch posts from the Lens subgraph:
+```typescript
+import { gql } from "@apollo/client";
+
+const FETCH_POSTS = gql`
+  query GetPosts($profileId: String!) {
+    posts(where: { profileId: $profileId }) {
+      id
+      contentURI
+      timestamp
+    }
+  }
+`;
+```
+
+Fetch writing editions from the Mirror subgraph:
+```typescript
+const FETCH_WRITING_EDITIONS = gql`
+  query GetWritingEditionPurchases($first: Int!) {
+    writingEditionPurchaseds(first: $first) {
+      id
+      buyer
+      timestamp
+    }
+  }
+`;
+```
+
+#### Using Custom Hooks
+Encapsulate GraphQL queries in reusable hooks for easier integration:
+```typescript
+import { useQuery } from "@apollo/client";
+
+export const useUserPosts = (profileId: string) => {
+  return useQuery(FETCH_POSTS, { variables: { profileId } });
+};
+```
+
+---
+
+### 🖥 UI Integration
+
+The frontend showcases subgraph data using pre-built components:
+- **LensPost**: Displays posts from the Lens Protocol.
+- **MirrorPost**: Displays writing editions from Mirror.xyz.
+
+Dynamic data fetching:
+```typescript
+const { data: userPosts, loading: loadingUserPosts } = useUserPosts("profileId");
+const { data: mirrorPosts, loading: loadingMirrorPosts } = useWritingEditionPurchased(5);
+
+if (loadingUserPosts || loadingMirrorPosts) {
+  return <Spinner />;
+}
+```
+
+---
+
+## 🛡 Troubleshooting
+
+- Ensure subgraph endpoints are reachable.
+- Verify your local network (`yarn chain`) is running during development.
+- Check Apollo Client configurations for correct URIs.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Check out the [CONTRIBUTING.md](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) guide for details.
+
+---
