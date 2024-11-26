@@ -28,8 +28,6 @@ const Home: NextPage = () => {
   const { followers } = useUserFollowers(1);
   const { followersPosts, loading: loadingFollowersPosts } = useFollowersPosts(followers);
 
-  console.log(userMetadata, "@@@@userMetadata");
-
   // Mirror
   const { posts: mirrorPosts, loading: loadingMirrorPosts } = useWritingEditionPurchased();
 

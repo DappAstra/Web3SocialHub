@@ -12,7 +12,7 @@ export const useUserMetadata = (userProfileId: number | null) => {
     const fetchData = async () => {
       try {
         const { profileMetadataSets } = await fetchProfileMetadataSets(userProfileId);
-        const metadata = profileMetadataSets[0]?.metadata;
+        const metadata = profileMetadataSets[profileMetadataSets.length - 1]?.metadata;
 
         if (metadata?.startsWith("ar://")) {
           const arweave = Arweave.init({
